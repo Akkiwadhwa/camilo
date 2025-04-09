@@ -108,6 +108,16 @@ def delete_user(user_id):
     flash('User deleted successfully', 'success')
     return redirect(url_for('admin'))
 
+@app.route('/delete/<filename>', methods=['POST'])
+def delete_file(filename):
+    file_path = os.path.join(app.config['OUTPUT_FOLDER'], filename)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        flash(f"{filename} has been deleted.", "success")
+    else:
+        flash(f"{filename} not found.", "danger")
+    return redirect(url_for('download_output'))
+
 @app.route('/download_output')
 @login_required
 def download_output():
