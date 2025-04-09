@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Download Output{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">📄 Available Output Files</h2>
+
+  {% if files %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">Filename</th>
+            <th scope="col" class="text-end">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for file in files %}
+          <tr>
+            <td>{{ file }}</td>
+            <td class="text-end">
+              <a href="{{ url_for('download_file', filename=file) }}" class="btn btn-sm btn-primary" download>
+                Download
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">No output files available.</div>
+  {% endif %}
+</div>
+{% endblock %}
