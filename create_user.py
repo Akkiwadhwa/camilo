@@ -1,6 +1,6 @@
 from extensions import db
 from models import User
-from app import app  # Make sure app is created before this runs
+from application import app  # Make sure app is created before this runs
 
 def create_admin():
     with app.app_context():
