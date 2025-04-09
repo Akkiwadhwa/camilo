@@ -21,12 +21,12 @@ def initialize_driver():
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
-    chrome_install = ChromeDriverManager().install()
+    # chrome_install = ChromeDriverManager().install()
 
-    folder = os.path.dirname(chrome_install)
-    chromedriver_path = os.path.join(folder, "chromedriver.exe")
+    # folder = os.path.dirname(chrome_install)
+    # chromedriver_path = os.path.join(folder, "chromedriver.exe")
 
-    service = Service(chromedriver_path)
+    service = Service('/var/www/html/camilo/chromedriver')
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
