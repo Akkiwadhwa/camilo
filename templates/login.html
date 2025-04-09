@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<style>
+    body {
+      /* Light subtle gradient background to make the card pop more */
+      background: linear-gradient(to bottom right, #f9f9f9, #ececec);
+      /* Ensure the body takes up the full viewport */
+   
+      margin: 0;
+    }
+  
+    .card {
+      border-radius: 8px;
+    }
+  
+    .card-header {
+      background-color: #fff;
+      border-bottom: none; /* remove default bootstrap card border if desired */
+    }
+  
+    .card-footer {
+      background-color: #fff;
+      border-top: none; /* remove default bootstrap card border if desired */
+    }
+  </style>
+<!-- Full-height container to vertically/horizontally center the login card -->
+<div
+    class="container-fluid d-flex flex-column justify-content-center align-items-center">
+    <!-- Card containing form, header, and footer -->
+    <div class="card shadow" style="max-width: 400px; width: 100%;">
+        <!-- Optional: You can create a separate 'card-header' or keep a heading in the body -->
+        <div class="card-header text-center">
+            <h2 class="mb-0">Welcome Back</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="form-control"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    Sign In
+                </button>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <p class="mb-0">
+                Don’t have an account? <a href="#">Contact Admin</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
