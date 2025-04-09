@@ -3,3 +3,5 @@ Flask-Login
 selenium
 webdriver-manager
 pandas
+openpyxl
+flask-sqlalchemy
