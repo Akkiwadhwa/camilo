@@ -107,6 +107,26 @@
       </div>
     </div>
 
+    <!-- Script 5 Card -->
+    <div class="col-md-6 col-lg-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <h5 class="card-title text-center mb-3">Informe Tributario</h5>
+          <form action="{{ url_for('script5') }}" method="POST" class="d-grid gap-3">
+            <div>
+              <label for="rut" class="form-label">RUT</label>
+              <input type="text" name="rut" class="form-control" placeholder="e.g. 76113362-4" required>
+            </div>
+            <div>
+              <label for="tax_code" class="form-label">Tax Code</label>
+              <input type="text" name="tax_code" class="form-control" placeholder="e.g. taleb18" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Run Script 5</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 {% endblock %}

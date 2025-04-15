@@ -1,5 +1,6 @@
 import logging
 import time
+import os
 
 from bs4 import BeautifulSoup
 from docx import Document
@@ -14,22 +15,27 @@ logging.basicConfig(level=logging.INFO)
 
 
 class MisSiir:
-    def __init__(self):
+    def __init__(self, output_dir=None):
         self.url = 'https://zeusr.sii.cl//AUT2000/InicioAutenticacion/IngresoRutClave.html?https://misiir.sii.cl/cgi_misii/siihome.cgi'
         # self.rut = '76766405-2'
         # self.tax_code = 'GTSPA76'
         self.rut = '76113362-4'
         self.tax_code = 'taleb18'
+        self.output_dir = output_dir
 
     @staticmethod
     def config_driver() -> webdriver.Chrome:
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
 
         chrome_options = Options()
-        # chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--headless')
         chrome_options.add_argument("--start-maximized")
         chrome_options.add_argument("--log-level=3")
-        # chrome_options.add_argument(f'user-agent={user_agent}')
+        chrome_options.add_argument(f'user-agent={user_agent}')
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-dev-shm-usage")
         return webdriver.Chrome(options=chrome_options)
 
     @staticmethod
@@ -789,24 +795,41 @@ class MisSiir:
         driver = self.config_driver()
         # driver.minimize_window()
         doc = Document()
-        self._login(driver)
-        logging.info('==== PAGE 1 STARTED ====')
-        self._page1(driver, doc)
-        logging.info('==== PAGE 2 STARTED ====')
-        self._page2(driver, doc)
-        logging.info('==== PAGE 3 STARTED ====')
-        self._page3(driver, doc)
-        logging.info('==== PAGE 4 STARTED ====')
-        self._page4(driver, doc)
-        logging.info('==== PAGE 5 STARTED ====')
-        self._page5(driver, doc)
-        logging.info('==== PAGE 6 STARTED ====')
-        self._page6(driver, doc)
-        logging.info('==== PAGE 7 STARTED ====')
-        self._page7(driver, doc)
-        doc.save(f'{self.rut}.docx')
+        try:
+            self._login(driver)
+            logging.info('==== PAGE 1 STARTED ====')
+            self._page1(driver, doc)
+            logging.info('==== PAGE 2 STARTED ====')
+            self._page2(driver, doc)
+            logging.info('==== PAGE 3 STARTED ====')
+            self._page3(driver, doc)
+            logging.info('==== PAGE 4 STARTED ====')
+            self._page4(driver, doc)
+            logging.info('==== PAGE 5 STARTED ====')
+            self._page5(driver, doc)
+            logging.info('==== PAGE 6 STARTED ====')
+            self._page6(driver, doc)
+            logging.info('==== PAGE 7 STARTED ====')
+            self._page7(driver, doc)
+            
+            # Save the document in the specified output directory if provided
+            if self.output_dir:
+                output_path = os.path.join(self.output_dir, f'{self.rut}.docx')
+                doc.save(output_path)
+                logging.info(f'Document saved to: {output_path}')
+            else:
+                doc.save(f'{self.rut}.docx')
+                logging.info(f'Document saved to: {self.rut}.docx')
 
-        logging.info('----------------- SCRIPT ENDS -------------------')
+            logging.info('----------------- SCRIPT ENDS -------------------')
+        except Exception as e:
+            logging.error(f"Error in script execution: {e}", exc_info=True)
+        finally:
+            # Ensure driver is properly closed
+            try:
+                driver.quit()
+                logging.info("Browser driver closed successfully")
+            except Exception as e:
+                logging.error(f"Error closing driver: {e}", exc_info=True)
 
 
-MisSiir().run()

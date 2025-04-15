@@ -11,6 +11,9 @@ from logger import setup_logger
 from check_password import process_accounts as process_accounts_script2
 from get_ddjj_table import process_accounts as process_accounts_script3
 from get_f29_codes import process_accounts as process_accounts_script4
+from informe_tributario import MisSiir
+import shutil
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -250,6 +253,49 @@ def script4():
 
     flash('Script 4 is now running in the background.', 'info')
     return redirect(url_for('dashboard'))
+
+@app.route('/script5', methods=['POST'])
+@login_required
+def script5():
+    try:
+        rut = request.form.get('rut')
+        tax_code = request.form.get('tax_code')
+        
+        if not rut or not tax_code:
+            flash('RUT and tax code are required', 'danger')
+            return redirect(url_for('dashboard'))
+            
+        logger.info(f"Script 5 (Informe Tributario) started by {current_user.username}")
+        
+        def background_task():
+            driver = None
+            try:
+                misii = MisSiir(output_dir=app.config['OUTPUT_FOLDER'])
+                # Override the default RUT and tax code with user input
+                misii.rut = rut
+                misii.tax_code = tax_code
+                misii.run()
+                logger.info("Script 5 (Informe Tributario) completed successfully.")
+            except Exception as e:
+                logger.error(f"Script 5 error: {e}", exc_info=True)
+            finally:
+                # Ensure driver is properly closed
+                if hasattr(misii, 'driver') and misii.driver:
+                    try:
+                        misii.driver.quit()
+                    except Exception as e:
+                        logger.error(f"Error closing driver: {e}", exc_info=True)
+
+        thread = threading.Thread(target=background_task)
+        thread.start()
+
+        flash('Script 5 (Informe Tributario) is now running in the background.', 'info')
+        return redirect(url_for('dashboard'))
+        
+    except Exception as e:
+        logger.error(f"Error starting Script 5: {e}", exc_info=True)
+        flash('Error starting Script 5', 'danger')
+        return redirect(url_for('dashboard'))
 
 if __name__ == '__main__':
     with app.app_context():
