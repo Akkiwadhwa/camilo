@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO)
 
@@ -814,7 +815,8 @@ class MisSiir:
             
             # Save the document in the specified output directory if provided
             if self.output_dir:
-                output_path = os.path.join(self.output_dir, f'{self.rut}.docx')
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                output_path = os.path.join(self.output_dir, f'{self.rut}_{timestamp}.docx')
                 doc.save(output_path)
                 logging.info(f'Document saved to: {output_path}')
             else:
