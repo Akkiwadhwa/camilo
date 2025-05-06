@@ -125,7 +125,7 @@ def delete_file(filename):
 @login_required
 def download_output():
     files = os.listdir(app.config['OUTPUT_FOLDER'])
-    files = sorted([f for f in files if f.endswith('.xlsx')], reverse=True)
+    files = sorted([f for f in files], reverse=True)
     return render_template('download_output.html', files=files)
 
 @app.route('/download/<filename>')
