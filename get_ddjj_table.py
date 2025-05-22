@@ -22,6 +22,7 @@ def write_output_file(output_dir, results_df):
     output_file_name = f"ddjj_table_{timestamp}.xlsx"
     output_file = os.path.join(output_dir, output_file_name)
     results_df.to_excel(output_file, index=False)
+    return output_file
 
 def get_ddjj_table_from_sii(username, password, retries=3):
     for attempt in range(retries):
@@ -37,6 +38,7 @@ def get_ddjj_table_from_sii(username, password, retries=3):
 
 def process_accounts(input_file, output_dir):
     df = read_input_file(input_file)
+    logger.info('Starting processing of accounts...')
     results = []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
@@ -59,7 +61,8 @@ def process_accounts(input_file, output_dir):
     for col in columns:
         if col not in results_df.columns:
             results_df[col] = None
-
     results_df = results_df[columns]
-    logger.info("DDJJ results processed.")
-    write_output_file(output_dir, results_df)
+
+    logger.info("All accounts processed. Writing results...")
+    output_file = write_output_file(output_dir, results_df)
+    return [output_file]  # Return as a list to match the expected format

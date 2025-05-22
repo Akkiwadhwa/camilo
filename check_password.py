@@ -6,6 +6,7 @@ import os
 import time
 from scraping_lib import check_password_account
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
 
 MAX_WORKERS = 5
 
@@ -17,10 +18,11 @@ def read_input_file(input_file):
 
 def write_output_file(output_dir, results_df):
     logger.info('Writing output file...')
-    output_file_name = "check_passwords.xlsx"
-    output_path = os.path.join(output_dir, output_file_name)
-    results_df.to_excel(output_path, index=False)
-    logger.info(f"Output written to {output_path}")
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    output_file_name = f"password_check_{timestamp}.xlsx"
+    output_file = os.path.join(output_dir, output_file_name)
+    results_df.to_excel(output_file, index=False)
+    return output_file
 
 def check_account(username, password, retries=3):
     for attempt in range(retries):
@@ -36,14 +38,12 @@ def check_account(username, password, retries=3):
 
 def process_accounts(input_file, output_dir):
     df = read_input_file(input_file)
-    logger.info('Starting account processing...')
+    logger.info('Starting processing of accounts...')
     results = []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = [
-            executor.submit(check_account, row['RUTF'], row['Clave'])
-            for _, row in df.iterrows()
-        ]
+        futures = [executor.submit(check_account, row['RUTF'], row['Clave'])
+                   for _, row in df.iterrows()]
         for future in as_completed(futures):
             results.append(future.result())
 
@@ -56,4 +56,5 @@ def process_accounts(input_file, output_dir):
     results_df = results_df[columns]
 
     logger.info("All accounts processed. Writing results...")
-    write_output_file(output_dir, results_df)
+    output_file = write_output_file(output_dir, results_df)
+    return [output_file]  # Return as a list to match the expected format

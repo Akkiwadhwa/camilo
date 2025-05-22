@@ -27,6 +27,7 @@ def initialize_driver():
     # chromedriver_path = os.path.join(folder, "chromedriver.exe")
 
     service = Service('/var/www/html/camilo/chromedriver')
+    # service = Service('chromedriver.exe')
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 

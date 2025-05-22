@@ -18,8 +18,10 @@ def read_input_file(input_file):
 def write_output_file(output_dir, results_df, month, year):
     logger.info('Writing output file...')
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_file = os.path.join(output_dir, f"data_{month}_{year}_{timestamp}.xlsx")
+    output_file_name = f"f29_codes_{month}_{year}_{timestamp}.xlsx"
+    output_file = os.path.join(output_dir, output_file_name)
     results_df.to_excel(output_file, index=False)
+    return output_file
 
 def process_account(username, password, year, month, target_codes, retries=3):
     for attempt in range(retries):
@@ -35,10 +37,11 @@ def process_account(username, password, year, month, target_codes, retries=3):
 
 def process_accounts(input_file, output_dir, month, year, target_codes):
     df = read_input_file(input_file)
+    logger.info('Starting processing of accounts...')
     results = []
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = [executor.submit(process_account, row['RUTF'], row['Clave'], year, month, target_codes)
+        futures = [executor.submit(process_account, row['RUTF'], row['Clave'], month, year, target_codes)
                    for _, row in df.iterrows()]
         for future in as_completed(futures):
             results.append(future.result())
@@ -50,5 +53,6 @@ def process_accounts(input_file, output_dir, month, year, target_codes):
             results_df[col] = None
     results_df = results_df[base_columns + target_codes]
 
-    logger.info("Script 4 processing done.")
-    write_output_file(output_dir, results_df, month, year)
+    logger.info("All accounts processed. Writing results...")
+    output_file = write_output_file(output_dir, results_df, month, year)
+    return [output_file]  # Return as a list to match the expected format

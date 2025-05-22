@@ -22,6 +22,7 @@ def write_output_file(output_dir, results_df, year):
     output_file_name = f"f22_status_{year}_{timestamp}.xlsx"
     output_file = os.path.join(output_dir, output_file_name)
     results_df.to_excel(output_file, index=False)
+    return output_file
 
 def process_account(username, password, year, retries=3):
     for attempt in range(retries):
@@ -62,4 +63,5 @@ def process_accounts(input_file, output_dir, year):
     results_df = results_df[columns]
 
     logger.info("All accounts processed. Writing results...")
-    write_output_file(output_dir, results_df, year)
+    output_file = write_output_file(output_dir, results_df, year)
+    return [output_file]  # Return as a list to match the expected format

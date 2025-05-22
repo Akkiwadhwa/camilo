@@ -7,6 +7,7 @@
 
   <div class="row g-4">
     <!-- Script 1 Card with form -->
+    {% if current_user.is_admin or current_user.can_access_script1 %}
     <div class="col-md-6 col-lg-3">
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
@@ -30,8 +31,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
     <!-- Script 2 Card -->
+    {% if current_user.is_admin or current_user.can_access_script2 %}
     <div class="col-md-6 col-lg-3">
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
@@ -50,9 +53,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
     <!-- Script 3 Card -->
-    <!-- Script 3 Card with form -->
+    {% if current_user.is_admin or current_user.can_access_script3 %}
     <div class="col-md-6 col-lg-3">
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
@@ -71,9 +75,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
     <!-- Script 4 Card -->
-    <!-- Script 4 Card with form -->
+    {% if current_user.is_admin or current_user.can_access_script4 %}
     <div class="col-md-6 col-lg-3">
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
@@ -106,8 +111,10 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
     <!-- Script 5 Card -->
+    {% if current_user.is_admin or current_user.can_access_script5 %}
     <div class="col-md-6 col-lg-3">
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column justify-content-between">
@@ -126,6 +133,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
 
   </div>
 </div>

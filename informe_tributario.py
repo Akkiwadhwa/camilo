@@ -1,6 +1,7 @@
 import logging
 import time
 import os
+import pandas as pd
 
 from bs4 import BeautifulSoup
 from docx import Document
@@ -23,6 +24,7 @@ class MisSiir:
         self.rut = '76113362-4'
         self.tax_code = 'taleb18'
         self.output_dir = output_dir
+        self.driver = None
 
     @staticmethod
     def config_driver() -> webdriver.Chrome:
@@ -791,6 +793,13 @@ class MisSiir:
             except Exception as e:
                 pass
 
+    def write_output_file(self, results_df):
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_file_name = f"informe_tributario_{self.rut}_{timestamp}.xlsx"
+        output_file = os.path.join(self.output_dir, output_file_name)
+        results_df.to_excel(output_file, index=False)
+        return output_file
+
     def run(self):
         logging.info('----------------- SCRIPT STARTS -------------------')
         driver = self.config_driver()
@@ -819,6 +828,7 @@ class MisSiir:
                 output_path = os.path.join(self.output_dir, f'{self.rut}_{timestamp}.docx')
                 doc.save(output_path)
                 logging.info(f'Document saved to: {output_path}')
+                return [f'{self.rut}_{timestamp}.docx']
             else:
                 doc.save(f'{self.rut}.docx')
                 logging.info(f'Document saved to: {self.rut}.docx')
