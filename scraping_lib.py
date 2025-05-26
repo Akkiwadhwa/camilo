@@ -15,8 +15,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def initialize_driver():
     chrome_options = Options()
-    #chrome_options.add_argument("--headless")
-    #chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -28,6 +28,7 @@ def initialize_driver():
 
     # service = Service(chromedriver_path)
     service = Service('/var/www/html/camilo/chromedriver')
+    # service = Service(r'D:\freelancer\camilo\camilo\camilo\chromedriver.exe')
     driver = webdriver.Chrome(service=service, options=chrome_options)
     return driver
 
